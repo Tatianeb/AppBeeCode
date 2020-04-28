@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BeeCodeApplication</string>
+    <string name="nav_open">abrir</string>
+    <string name="nav_close">fechar</string>
 </resources>
