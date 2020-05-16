@@ -1,20 +1,42 @@
 package br.com.tatianeberrocal.beecodeapplication
 
 import android.content.Context
+import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.net.URL
 
 object ServicosService {
-    fun getServicos (context: Context): List<Servicos> {
-        val servicos = mutableListOf<Servicos>()
+    val host = "https://tatianeberrocal.pythonanywhere.com"
+    val TAG = "beecode"
 
-        for (i in 1..10) {
-            val d = Servicos()
-            d.nome = "Servicos $i"
-            d.preco = "Preço Servicos $i"
-            d.fornecedor = "Fornecedor Servicos $i"
-            d.foto = "https://catracalivre.com.br/wp-content/uploads/2015/01/banho.jpg"
-            servicos.add(d)
+    fun getServicos (context: Context): List<Servicos>{
+        if (AndroidUtils.isInternetDisponivel(context)) {
+            val url = "$host/servicos"
+            val json = HttpHelper.get(url)
+
+        Log.d(TAG, json)
+        return parserJson<List<Servicos>>(json)
+        }else{
+            return ArrayList()
         }
+    }
 
-        return servicos
+    fun save(servico: Servicos): Response {
+        val json = HttpHelper.post("$host/servicos", servico.toJson())
+        return parserJson(json)
+    }
+
+    fun delete(servicos: Servicos): Response {
+        Log.d(TAG, servicos.id.toString())
+        val url = "$host/servicos/${servicos.id}"
+        val json = HttpHelper.delete(url)
+        Log.d(TAG, json)
+        return parserJson(json)
+    }
+
+    inline fun <reified T> parserJson(json: String): T {
+        val type = object : TypeToken<T>(){}.type
+        return Gson().fromJson<T>(json, type)
     }
 }

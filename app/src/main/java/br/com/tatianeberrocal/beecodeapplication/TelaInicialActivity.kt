@@ -13,30 +13,34 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_tela_inicial.*
+import kotlinx.android.synthetic.main.adapter_servico.*
 import kotlinx.android.synthetic.main.toolbar.*
 
-class TelaInicialActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
+class TelaInicialActivity : DebugActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val context: Context get() = this
-    private var sevicos = listOf<Servicos>()
+    private var servicos = listOf<Servicos>()
+    private var REQUEST_CADASTRO = 1
+    private var REQUEST_REMOVE= 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tela_inicial)
 
-        var params = intent.extras
-        var nome_usuario = params?.getString("nome_usuario")
+        // var params = intent.extras
+        // var nome_usuario = params?.getString("nome_usuario")
 
-        Toast.makeText(this,
-            "Bem vindo $nome_usuario",
-        Toast.LENGTH_LONG
-        ).show()
-
+        // Toast.makeText(this,
+        //    "Bem vindo $nome_usuario",
+        // Toast.LENGTH_LONG
+        // ).show()
+        val args:Bundle? = intent.extras
         // colocar toolbar
         setSupportActionBar(toolbar)
 
@@ -44,7 +48,6 @@ class TelaInicialActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         configuraMenuLateral()
-        // configurar cardview
         recyclerServicos?.layoutManager = LinearLayoutManager(context)
         recyclerServicos?.itemAnimator = DefaultItemAnimator()
         recyclerServicos?.setHasFixedSize(true)
@@ -56,62 +59,31 @@ class TelaInicialActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     }
 
     fun taskServicos() {
-        this.sevicos = ServicosService.getServicos(context)
-        // atualizar lista
-        recyclerServicos?.adapter = ServicoAdapter(sevicos) {onClickServico(it)}
+        Thread {
+            this.servicos = ServicosService.getServicos(context)
+            runOnUiThread {
+                recyclerServicos?.adapter = ServicoAdapter(this.servicos) { onClickServico(it) }
+            }
+        }.start()
     }
 
-    // tratamento do evento de clicar em uma disciplina
     fun onClickServico(servico: Servicos) {
         Toast.makeText(context, "Clicou servico ${servico.nome}", Toast.LENGTH_SHORT).show()
+        val intent = Intent(context, ServicoActivity::class.java)
+        intent.putExtra("servicos", servico)
+        startActivityForResult(intent, REQUEST_REMOVE)
     }
 
-    fun Tela(nomeBotao: String) {
-        //Toast.makeText(context, "$nomeBotao", Toast.LENGTH_LONG).show()
-
-        // criar intent
-        val intentpag = Intent(this, MainPaginas::class.java)
-        // colocar parâmetros (opcional)
-        val params = Bundle()
-        params.putString("NomeTela", nomeBotao)
-        intentpag.putExtras(params)
-
-        // fazer a chamada esperando resultado
-        startActivityForResult(intentpag, 1)
-
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main,menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item?.itemId
-       if (id == R.id.action_buscar){
-          Toast.makeText(this, "Clicou em Buscar", Toast.LENGTH_LONG).show()
-       }  else if (id == R.id.action_atualizar){
-
-           Toast.makeText(this, "Clicou em Atualizar", Toast.LENGTH_SHORT).show()
-
-       } else if (id == android.R.id.home){
-           finish()
-       }else if (id == R.id.action_config){
-           var intent = Intent(this, MainConfiguracao::class.java)
-           startActivity(intent)
-           Toast.makeText(this, "Clicou em configurações", Toast.LENGTH_SHORT).show()
-       }
-        return super.onOptionsItemSelected(item)
-    }
     private fun configuraMenuLateral() {
-
-        var toogle = ActionBarDrawerToggle(this, layoutMenuLateral, toolbar, R.string.nav_open, R.string.nav_close)
+        // ícone de menu (hamburger) para mostrar o menu
+        var toogle = ActionBarDrawerToggle(this, layoutMenuLateral, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
 
         layoutMenuLateral.addDrawerListener(toogle)
         toogle.syncState()
 
         menu_lateral.setNavigationItemSelectedListener(this)
     }
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -136,8 +108,56 @@ class TelaInicialActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             }
         }
 
-        // fecha menu depois de tratar o evento
         layoutMenuLateral.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // infla o menu com os botões da ActionBar
+        menuInflater.inflate(R.menu.menu_main, menu)
+        // vincular evento de buscar
+        (menu?.findItem(R.id.action_buscar)?.actionView as SearchView).setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                // ação enquanto está digitando
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // ação  quando terminou de buscar e enviou
+                return false
+            }
+
+        })
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        // id do item clicado
+        val id = item?.itemId
+        // verificar qual item foi clicado e mostrar a mensagem Toast na tela
+        // a comparação é feita com o recurso de id definido no xml
+        if  (id == R.id.action_buscar) {
+            Toast.makeText(context, "Botão de buscar", Toast.LENGTH_LONG).show()
+        } else if (id == R.id.action_atualizar) {
+            Toast.makeText(context, "Botão de atualizar", Toast.LENGTH_LONG).show()
+        } else if (id == R.id.action_config) {
+            Toast.makeText(context, "Botão de configuracoes", Toast.LENGTH_LONG).show()
+        } else if (id == R.id.action_adicionar) {
+            // iniciar activity de cadastro
+            val intent = Intent(context, ServicoCadastroActivity::class.java)
+            startActivityForResult(intent, REQUEST_CADASTRO)
+        }
+        // botão up navigation
+        else if (id == android.R.id.home) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CADASTRO || requestCode == REQUEST_REMOVE ) {
+            taskServicos()
+        }
     }
 }

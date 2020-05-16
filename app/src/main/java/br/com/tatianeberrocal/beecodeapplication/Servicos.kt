@@ -1,5 +1,6 @@
 package br.com.tatianeberrocal.beecodeapplication
 
+import com.google.gson.GsonBuilder
 import java.io.Serializable
 
 class Servicos:Serializable {
@@ -10,7 +11,10 @@ class Servicos:Serializable {
         var fornecedor = ""
 
         override fun toString(): String {
-            return "Servico(nome='$nome')"
+            return "Servicos(nome='$nome')"
         }
 
+        fun toJson(): String {
+                return GsonBuilder().create().toJson(this)
+        }
 }
