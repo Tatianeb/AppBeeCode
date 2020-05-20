@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, 1)
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
             val result = data?.getStringExtra("result")
             Toast.makeText(context, "$result", Toast.LENGTH_LONG).show()

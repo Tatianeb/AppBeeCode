@@ -22,8 +22,8 @@ object ServicosService {
         }
     }
 
-    fun save(servico: Servicos): Response {
-        val json = HttpHelper.post("$host/servicos", servico.toJson())
+    fun save(servicos: Servicos): Response {
+        val json = HttpHelper.post("$host/servicos", servicos.toJson())
         return parserJson(json)
     }
 

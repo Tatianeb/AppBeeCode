@@ -11,20 +11,20 @@ class ServicoCadastroActivity : DebugActivity() {
         setTitle("Novo Serviço")
 
         salvarServico.setOnClickListener {
-            val servico = Servicos()
-            servico.nome = nomeServico.text.toString()
-            servico.preco = preco.text.toString()
-            servico.fornecedor = fornecedor.text.toString()
-            servico.foto = urlFoto.text.toString()
+            val servicos = Servicos()
+            servicos.nome = nomeServico.text.toString()
+            servicos.preco = preco.text.toString()
+            servicos.fornecedor = fornecedor.text.toString()
+            servicos.foto = urlFoto.text.toString()
 
-            taskAtualizar(servico)
+            taskAtualizar(servicos)
         }
     }
 
-    private fun taskAtualizar(servico: Servicos) {
+    private fun taskAtualizar(servicos: Servicos) {
 
         Thread {
-            ServicosService.save(servico)
+            ServicosService.save(servicos)
             runOnUiThread {
 
                 finish()

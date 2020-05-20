@@ -67,10 +67,10 @@ class TelaInicialActivity : DebugActivity(), NavigationView.OnNavigationItemSele
         }.start()
     }
 
-    fun onClickServico(servico: Servicos) {
-        Toast.makeText(context, "Clicou servico ${servico.nome}", Toast.LENGTH_SHORT).show()
+    fun onClickServico(servicos: Servicos) {
+        Toast.makeText(context, "Clicou servico ${servicos.nome}", Toast.LENGTH_SHORT).show()
         val intent = Intent(context, ServicoActivity::class.java)
-        intent.putExtra("servicos", servico)
+        intent.putExtra("servico", servicos)
         startActivityForResult(intent, REQUEST_REMOVE)
     }
 
@@ -156,6 +156,7 @@ class TelaInicialActivity : DebugActivity(), NavigationView.OnNavigationItemSele
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CADASTRO || requestCode == REQUEST_REMOVE ) {
             taskServicos()
         }

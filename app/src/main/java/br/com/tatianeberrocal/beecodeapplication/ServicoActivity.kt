@@ -10,8 +10,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_cadastro_servico.*
 import kotlinx.android.synthetic.main.activity_servico.*
 import kotlinx.android.synthetic.main.toolbar.*
-import kotlinx.android.synthetic.main.activity_servico.nomeServico as nomeServico1
-
+import kotlinx.android.synthetic.main.activity_servico.nomeServico
 class ServicoActivity : DebugActivity() {
 
     private val context: Context get() = this
@@ -32,6 +31,7 @@ class ServicoActivity : DebugActivity() {
         // up navigation
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        nomeServico.setText("Servicos")
         Picasso.with(this).load(servicos?.foto).fit().into(imagemServico,
                 object: com.squareup.picasso.Callback{
                     override fun onSuccess() {}
