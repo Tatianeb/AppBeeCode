@@ -11,4 +11,9 @@
 
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
+
+    <string name="API_KEY">AIzaSyBmh6Bonh-PGdE2Huna-anAdjZ5pMOIaFI</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

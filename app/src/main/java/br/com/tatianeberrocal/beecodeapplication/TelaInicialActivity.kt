@@ -63,8 +63,15 @@ class TelaInicialActivity : DebugActivity(), NavigationView.OnNavigationItemSele
             this.servicos = ServicosService.getServicos(context)
             runOnUiThread {
                 recyclerServicos?.adapter = ServicoAdapter(this.servicos) { onClickServico(it) }
+                enviaNotificacao(this.servicos.get(2))
             }
         }.start()
+    }
+
+    fun enviaNotificacao(servicos: Servicos) {
+        val intent = Intent(this, ServicoActivity::class.java)
+        intent.putExtra("servico", servicos)
+        NotificationUtil.create(this, 1, intent, "BeeCode", "Você tem nova atividade na ${servicos.nome}")
     }
 
     fun onClickServico(servicos: Servicos) {
@@ -100,7 +107,8 @@ class TelaInicialActivity : DebugActivity(), NavigationView.OnNavigationItemSele
             }
 
             R.id.nav_localizacao -> {
-                Toast.makeText(this, "Clicou Localização", Toast.LENGTH_SHORT).show()
+                var intent = Intent(this, MapasActivity::class.java)
+                startActivity(intent)
             }
 
             R.id.nav_config -> {

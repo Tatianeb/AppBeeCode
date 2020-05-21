@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "586251539544",
+    "firebase_url": "https://beecode-77ccd.firebaseio.com",
+    "project_id": "beecode-77ccd",
+    "storage_bucket": "beecode-77ccd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:586251539544:android:0ffafc9cfbfb9cdf88662d",
+        "android_client_info": {
+          "package_name": "br.com.tatianeberrocal.beecodeapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "586251539544-m3744op8buihqemfb0kvgskuv3auhkf9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCh_lEFLhk6PzC9fXn8t4ElE9Hv7N5T4w4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "586251539544-m3744op8buihqemfb0kvgskuv3auhkf9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
